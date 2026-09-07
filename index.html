@@ -67,6 +67,16 @@
             color: #fff;
             border-color: #1d4ed8;
         }
+        .filter-btn.filter-holidays {
+            background: #ecfdf5;
+            color: #065f46;
+            border-color: #6ee7b7;
+        }
+        .filter-btn.active[data-filter="holidays"] {
+            background: #059669;
+            color: #fff;
+            border-color: #059669;
+        }
         .filter-btn.active[data-filter="drive"] {
             background: #d97706;
             color: #fff;
@@ -123,6 +133,7 @@
                 <button type="button" class="filter-btn filter-oz shrink-0 px-3 py-1.5 rounded-full border text-xs font-bold touch" data-filter="oz">עוז</button>
                 <button type="button" class="filter-btn shrink-0 px-3 py-1.5 rounded-full border border-amber-300 bg-amber-50 text-amber-900 text-xs font-bold touch" data-filter="drive">הסעות</button>
                 <button type="button" class="filter-btn filter-oz shrink-0 px-3 py-1.5 rounded-full border text-xs font-bold touch" data-filter="oz-school">מערכת עוז</button>
+                <button type="button" class="filter-btn filter-holidays shrink-0 px-3 py-1.5 rounded-full border text-xs font-bold touch" data-filter="holidays">חופשות</button>
             </div>
         </div>
     </header>
@@ -269,6 +280,60 @@
             ]
         };
 
+        // לוח חופשות תשפ״ז
+        const holidays = [
+            {
+                name: 'ראש השנה',
+                ranges: [{ days: 'שישי–ראשון', label: '11–13.9.26', start: '2026-09-11', end: '2026-09-13' }]
+            },
+            {
+                name: 'ערב יום כיפור – יום כיפור',
+                ranges: [{ days: 'ראשון–שני', label: '20–21.9.26', start: '2026-09-20', end: '2026-09-21' }]
+            },
+            {
+                name: 'גשר בין כיפור לחג הסוכות',
+                ranges: [{ days: 'שלישי–חמישי', label: '22–24.9.26', start: '2026-09-22', end: '2026-09-24' }]
+            },
+            {
+                name: 'חול המועד סוכות',
+                ranges: [
+                    { days: 'ראשון–שני', label: '27–28.9.26', start: '2026-09-27', end: '2026-09-28' },
+                    { days: 'שלישי–שבת', label: '29.9–3.10.26', start: '2026-09-29', end: '2026-10-03' }
+                ]
+            },
+            {
+                name: 'חנוכה',
+                ranges: [{ days: 'ראשון–חמישי', label: '6–10.12.26', start: '2026-12-06', end: '2026-12-10' }]
+            },
+            {
+                name: 'פורים',
+                ranges: [{ days: 'שלישי–רביעי', label: '23–24.3.27', start: '2027-03-23', end: '2027-03-24' }]
+            },
+            {
+                name: 'חופשה לפני ערב פסח',
+                ranges: [
+                    { days: 'שלישי–חמישי', label: '13–15.4.27', start: '2027-04-13', end: '2027-04-15' },
+                    { days: 'ראשון–שני', label: '18–19.4.27', start: '2027-04-18', end: '2027-04-19' }
+                ]
+            },
+            {
+                name: 'פסח – חול המועד',
+                ranges: [{ days: 'שלישי–רביעי', label: '20–28.4.27', start: '2027-04-20', end: '2027-04-28' }]
+            },
+            {
+                name: 'יום הזיכרון',
+                ranges: [{ days: 'שלישי', label: '11.5.27', start: '2027-05-11', end: '2027-05-11' }]
+            },
+            {
+                name: 'יום העצמאות',
+                ranges: [{ days: 'רביעי', label: '12.5.27', start: '2027-05-12', end: '2027-05-12' }]
+            },
+            {
+                name: 'ערב חג שבועות',
+                ranges: [{ days: 'חמישי', label: '10.6.27', start: '2027-06-10', end: '2027-06-10' }]
+            }
+        ];
+
         let activeFilter = 'all';
         let selectedDay = defaultDayName();
 
@@ -363,7 +428,7 @@
             const todayName = jsDayToHebrew();
             const bar = document.getElementById('days-bar');
             bar.innerHTML = '';
-            if (activeFilter === 'oz-school') {
+            if (activeFilter === 'oz-school' || activeFilter === 'holidays') {
                 bar.classList.add('opacity-40', 'pointer-events-none');
             } else {
                 bar.classList.remove('opacity-40', 'pointer-events-none');
@@ -514,6 +579,84 @@
             `;
         }
 
+        function todayAtMidnight() {
+            const d = new Date();
+            d.setHours(0, 0, 0, 0);
+            return d;
+        }
+
+        function holidayStatus(range) {
+            const now = todayAtMidnight();
+            const start = new Date(`${range.start}T00:00:00`);
+            const end = new Date(`${range.end}T00:00:00`);
+            if (now >= start && now <= end) return 'current';
+            if (now < start) return 'future';
+            return 'past';
+        }
+
+        function daysUntil(range) {
+            const now = todayAtMidnight();
+            const start = new Date(`${range.start}T00:00:00`);
+            return Math.round((start - now) / 86400000);
+        }
+
+        function renderHolidays() {
+            const enriched = holidays.map(h => {
+                const statuses = h.ranges.map(holidayStatus);
+                const isCurrent = statuses.includes('current');
+                const isPast = statuses.every(s => s === 'past');
+                const firstFuture = h.ranges.find(r => holidayStatus(r) === 'future');
+                return { ...h, isCurrent, isPast, firstFuture };
+            });
+
+            const nextHoliday = enriched.find(h => !h.isPast && !h.isCurrent);
+
+            const cards = enriched.map(h => {
+                const isNext = nextHoliday && nextHoliday.name === h.name;
+                let frame = 'border-stone-200 bg-white/95';
+                let badge = '';
+
+                if (h.isCurrent) {
+                    frame = 'border-emerald-500 bg-emerald-50 ring-2 ring-emerald-500/40';
+                    badge = '<span class="text-[10px] font-bold bg-emerald-600 text-white px-2 py-0.5 rounded-full">עכשיו</span>';
+                } else if (isNext) {
+                    frame = 'border-emerald-300 bg-emerald-50/50';
+                    const d = daysUntil(h.firstFuture);
+                    badge = `<span class="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">הקרוב · בעוד ${d} ימים</span>`;
+                } else if (h.isPast) {
+                    frame = 'border-stone-200 bg-stone-50 opacity-60';
+                    badge = '<span class="text-[10px] font-bold bg-stone-200 text-stone-600 px-2 py-0.5 rounded-full">עבר</span>';
+                }
+
+                const ranges = h.ranges.map(r => `
+                    <div class="flex items-center justify-between gap-2 rounded-lg border border-emerald-200/70 bg-white/80 px-2.5 py-1.5">
+                        <span class="text-[11px] font-semibold text-stone-600">${r.days}</span>
+                        <span class="text-xs font-extrabold text-emerald-800" dir="ltr">${r.label}</span>
+                    </div>
+                `).join('');
+
+                return `
+                    <article class="rounded-2xl border ${frame} p-3 shadow-sm space-y-2">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <h3 class="text-sm sm:text-base font-extrabold text-stone-900">${h.name}</h3>
+                            ${badge}
+                        </div>
+                        <div class="space-y-1.5">${ranges}</div>
+                    </article>
+                `;
+            }).join('');
+
+            return `
+                <section class="space-y-3">
+                    <div class="bg-white/95 rounded-2xl border border-emerald-200 p-3.5 sm:p-4 shadow-sm">
+                        <h2 class="text-lg sm:text-xl font-extrabold text-emerald-800">לוח חופשות · תשפ״ז</h2>
+                        <p class="text-xs text-stone-500 mt-0.5">חופשות בית הספר והגן · מסומן מה קורה עכשיו ומה הקרוב</p>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">${cards}</div>
+                </section>
+            `;
+        }
+
         function render() {
             const todayName = jsDayToHebrew();
             document.getElementById('today-badge').textContent = `היום: ${todayName}`;
@@ -523,6 +666,11 @@
 
             if (activeFilter === 'oz-school') {
                 root.innerHTML = renderOzSchoolGrid();
+                return;
+            }
+
+            if (activeFilter === 'holidays') {
+                root.innerHTML = renderHolidays();
                 return;
             }
 
