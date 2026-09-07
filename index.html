@@ -120,7 +120,7 @@
                 ozLesson: null,
                 schoolReturn: 'עוז חוזר ב־13:30 · לאור יש אילוף',
                 romiPickup: { time: '16:00', place: 'מהגן' },
-                orPickup: null
+                orPickup: { time: '15:00', place: 'מאילוף כלבים', note: 'בסוף אילוף הכלבים' }
             },
             {
                 day: 'חמישי',
@@ -259,13 +259,11 @@
                 rows.push({
                     sort: parseStartMinutes(day.orPickup.time),
                     html: `
-                    <div class="rounded-xl border-2 border-teal-600 bg-teal-50 px-3 py-3 text-xs leading-relaxed text-teal-950 shadow-sm">
-                        <div class="font-extrabold text-sm mb-1">⚠️ אור · איסוף מהנבחרת</div>
-                        <div>
-                            לאסוף את אור <strong>${day.orPickup.place}</strong>
-                            ב־<span dir="ltr" class="font-extrabold text-base">${day.orPickup.time}</span>
-                        </div>
-                        ${day.orPickup.note ? `<div class="mt-1 font-semibold opacity-90">${day.orPickup.note}</div>` : ''}
+                    <div class="rounded-xl border chip-or px-3 py-2.5 text-xs leading-relaxed">
+                        <div class="font-bold mb-0.5">אור · איסוף</div>
+                        לאסוף את אור <strong>${day.orPickup.place}</strong>
+                        ב־<span dir="ltr" class="font-extrabold">${day.orPickup.time}</span>
+                        ${day.orPickup.note ? ` · ${day.orPickup.note}` : ''}
                     </div>`
                 });
             }
