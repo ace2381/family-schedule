@@ -160,16 +160,52 @@
             return schedule.some(d => d.day === today) ? today : 'ראשון';
         }
 
-        function activityHtml(items, chipClass, personLabel) {
-            if (!items || items.length === 0) return '';
-            return items.map(a => `
-                <div class="rounded-xl border ${chipClass} px-2.5 py-2">
-                    <div class="text-[10px] font-bold opacity-70">${personLabel}</div>
+        function parseStartMinutes(timeStr) {
+            if (!timeStr) return 9999;
+            const m = String(timeStr).match(/(\d{1,2}):(\d{2})/);
+            if (!m) return 9999;
+            return parseInt(m[1], 10) * 60 + parseInt(m[2], 10);
+        }
+
+        function activityCard(a) {
+            return `
+                <div class="rounded-xl border ${a.chipClass} px-2.5 py-2 ${a.extraClass || ''}">
+                    <div class="text-[10px] font-bold opacity-70">${a.personLabel}</div>
                     <div class="font-bold text-sm leading-snug">${a.title}</div>
                     <div class="text-xs font-semibold mt-0.5" dir="ltr">${a.time}</div>
                     ${a.place ? `<div class="text-[11px] font-medium mt-1 opacity-90">📍 ${a.place}</div>` : ''}
                 </div>
-            `).join('');
+            `;
+        }
+
+        function collectActivities(day, f) {
+            const list = [];
+            if (f.showOr) {
+                (day.or || []).forEach(a => list.push({
+                    ...a, personLabel: 'אור', chipClass: 'chip-or', sort: parseStartMinutes(a.time)
+                }));
+            }
+            if (f.showRomi) {
+                (day.romi || []).forEach(a => list.push({
+                    ...a, personLabel: 'רומי', chipClass: 'chip-romi', sort: parseStartMinutes(a.time)
+                }));
+            }
+            if (f.showOz) {
+                (day.oz || []).forEach(a => list.push({
+                    ...a, personLabel: 'עוז · חוגים', chipClass: 'chip-oz', sort: parseStartMinutes(a.time)
+                }));
+                if (day.ozLesson) {
+                    list.push({
+                        ...day.ozLesson,
+                        personLabel: 'עוז · שיעור ערב',
+                        chipClass: 'chip-oz',
+                        extraClass: 'ring-1 ring-blue-300/50',
+                        sort: parseStartMinutes(day.ozLesson.time)
+                    });
+                }
+            }
+            list.sort((a, b) => a.sort - b.sort);
+            return list;
         }
 
         function filteredBlocks() {
@@ -209,8 +245,20 @@
             if (!f.showDrive) return '';
             const rows = [];
 
+            if (day.schoolReturn) {
+                rows.push({
+                    sort: 13 * 60 + 30,
+                    html: `
+                    <div class="rounded-xl border chip-school px-3 py-2.5 text-xs leading-relaxed">
+                        <div class="font-bold mb-0.5">🏫 חזרה מבית הספר · <span dir="ltr">13:30</span></div>
+                        ${day.schoolReturn}
+                    </div>`
+                });
+            }
             if (day.orPickup) {
-                rows.unshift(`
+                rows.push({
+                    sort: parseStartMinutes(day.orPickup.time),
+                    html: `
                     <div class="rounded-xl border-2 border-teal-600 bg-teal-50 px-3 py-3 text-xs leading-relaxed text-teal-950 shadow-sm">
                         <div class="font-extrabold text-sm mb-1">⚠️ אור · איסוף מהנבחרת</div>
                         <div>
@@ -218,28 +266,23 @@
                             ב־<span dir="ltr" class="font-extrabold text-base">${day.orPickup.time}</span>
                         </div>
                         ${day.orPickup.note ? `<div class="mt-1 font-semibold opacity-90">${day.orPickup.note}</div>` : ''}
-                    </div>
-                `);
-            }
-            if (day.schoolReturn) {
-                rows.push(`
-                    <div class="rounded-xl border chip-school px-3 py-2.5 text-xs leading-relaxed">
-                        <div class="font-bold mb-0.5">🏫 חזרה מבית הספר</div>
-                        ${day.schoolReturn}
-                    </div>
-                `);
+                    </div>`
+                });
             }
             if (day.romiPickup) {
-                rows.push(`
+                rows.push({
+                    sort: parseStartMinutes(day.romiPickup.time),
+                    html: `
                     <div class="rounded-xl border chip-pickup px-3 py-2.5 text-xs leading-relaxed">
                         <div class="font-bold mb-0.5">רומי · איסוף מהגן</div>
                         לאסוף מהגן ב־<span dir="ltr" class="font-extrabold">${day.romiPickup.time}</span>
-                    </div>
-                `);
+                    </div>`
+                });
             }
 
             if (!rows.length) return '';
-            return `<div class="mt-3 space-y-2"><h3 class="text-xs font-extrabold text-stone-800">הסעות ואיסופים</h3>${rows.join('')}</div>`;
+            rows.sort((a, b) => a.sort - b.sort);
+            return `<div class="mt-3 space-y-2"><h3 class="text-xs font-extrabold text-stone-800">הסעות ואיסופים</h3>${rows.map(r => r.html).join('')}</div>`;
         }
 
         function render() {
@@ -261,22 +304,8 @@
                 ? `<span class="inline-flex items-center gap-1 rounded-full border chip-drive px-2.5 py-1 text-xs font-bold">🚗 הסעות: ${day.driver}</span>`
                 : `<span class="inline-flex items-center rounded-full border border-stone-200 bg-stone-50 px-2.5 py-1 text-xs font-bold text-stone-400">אין הסעות</span>`;
 
-            let activities = '';
-            if (f.showOr) activities += activityHtml(day.or, 'chip-or', 'אור');
-            if (f.showRomi) activities += activityHtml(day.romi, 'chip-romi', 'רומי');
-            if (f.showOz) {
-                activities += activityHtml(day.oz, 'chip-oz', 'עוז · חוגים');
-                if (day.ozLesson) {
-                    activities += `
-                        <div class="rounded-xl border chip-oz px-2.5 py-2 ring-1 ring-blue-300/50">
-                            <div class="text-[10px] font-bold opacity-70">עוז · שיעור ערב</div>
-                            <div class="font-bold text-sm leading-snug">${day.ozLesson.title}</div>
-                            <div class="text-xs font-semibold mt-0.5" dir="ltr">${day.ozLesson.time}</div>
-                            ${day.ozLesson.place ? `<div class="text-[11px] font-medium mt-1 opacity-90">📍 ${day.ozLesson.place}</div>` : ''}
-                        </div>`;
-                }
-            }
-
+            const sorted = collectActivities(day, f);
+            let activities = sorted.map(activityCard).join('');
             if (!activities && activeFilter !== 'drive') {
                 activities = `<p class="empty-slot text-xs col-span-full py-2">אין חוגים ביום זה / בסינון הזה</p>`;
             }
