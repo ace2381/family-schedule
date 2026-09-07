@@ -62,6 +62,11 @@
             color: #fff;
             border-color: #2563eb;
         }
+        .filter-btn.active[data-filter="oz-school"] {
+            background: #1d4ed8;
+            color: #fff;
+            border-color: #1d4ed8;
+        }
         .filter-btn.active[data-filter="drive"] {
             background: #d97706;
             color: #fff;
@@ -76,11 +81,25 @@
             color: #1e293b;
             border-color: #a7f3d0;
         }
+        .chip-oz-school { background: #eff6ff; color: #1e3a8a; border-color: #bfdbfe; }
         .name-or { color: #16a34a; }
         .name-romi { color: #db2777; }
         .name-oz { color: #2563eb; }
         .empty-slot { color: #a8a29e; font-style: italic; }
         .touch { min-height: 44px; touch-action: manipulation; }
+        .tt-cell { min-height: 52px; }
+        .tt-subj-math { background: #dcfce7; }
+        .tt-subj-lang { background: #e0f2fe; }
+        .tt-subj-eng { background: #ede9fe; }
+        .tt-subj-pe { background: #fef9c3; }
+        .tt-subj-sci { background: #e5e7eb; }
+        .tt-subj-art { background: #ffedd5; }
+        .tt-subj-bible { background: #fce7f3; }
+        .tt-subj-journey { background: #f3e8ff; }
+        .tt-subj-geo { background: #fde68a; }
+        .tt-subj-heritage { background: #d1fae5; }
+        .tt-subj-values { background: #fbcfe8; }
+        .tt-subj-empty { background: #fafaf9; color: #a8a29e; }
     </style>
 </head>
 <body class="min-h-screen antialiased">
@@ -103,6 +122,7 @@
                 <button type="button" class="filter-btn filter-romi shrink-0 px-3 py-1.5 rounded-full border text-xs font-bold touch" data-filter="romi">רומי</button>
                 <button type="button" class="filter-btn filter-oz shrink-0 px-3 py-1.5 rounded-full border text-xs font-bold touch" data-filter="oz">עוז</button>
                 <button type="button" class="filter-btn shrink-0 px-3 py-1.5 rounded-full border border-amber-300 bg-amber-50 text-amber-900 text-xs font-bold touch" data-filter="drive">הסעות</button>
+                <button type="button" class="filter-btn filter-oz shrink-0 px-3 py-1.5 rounded-full border text-xs font-bold touch" data-filter="oz-school">מערכת עוז</button>
             </div>
         </div>
     </header>
@@ -188,6 +208,67 @@
             }
         ];
 
+        const PERIODS = [
+            { num: 1, time: '08:00–08:45' },
+            { num: 2, time: '08:45–09:30' },
+            { num: 3, time: '10:15–11:00' },
+            { num: 4, time: '11:00–11:45' },
+            { num: 5, time: '12:00–12:45' },
+            { num: 6, time: '12:45–13:30' }
+        ];
+
+        // מערכת שעות עוז · כיתה ב׳ ה
+        const ozSchool = {
+            'ראשון': [
+                { subject: 'מדע וטכנולוגיה', teacher: 'לנקר הגר', css: 'tt-subj-sci' },
+                { subject: 'מדע וטכנולוגיה', teacher: 'לנקר הגר', css: 'tt-subj-sci' },
+                null,
+                { subject: 'חנ״ג', teacher: 'פלד חן', css: 'tt-subj-pe' },
+                { subject: 'אנגלית', teacher: 'אפלבוים דליה רחל', css: 'tt-subj-eng' },
+                { subject: 'אנגלית', teacher: 'אפלבוים דליה רחל', css: 'tt-subj-eng' }
+            ],
+            'שני': [
+                { subject: 'שפה', teacher: 'אתי קומפלר', css: 'tt-subj-lang' },
+                { subject: 'שפה', teacher: 'אתי קומפלר', css: 'tt-subj-lang' },
+                null,
+                { subject: 'שפה', teacher: 'אתי קומפלר', css: 'tt-subj-lang' },
+                { subject: 'חינוך לערכים', teacher: 'אתי קומפלר', css: 'tt-subj-values' },
+                { subject: 'אנגלית', teacher: 'אפלבוים דליה רחל', css: 'tt-subj-eng' }
+            ],
+            'שלישי': [
+                { subject: 'מסע למידה', teacher: 'אתי קומפלר', css: 'tt-subj-journey' },
+                { subject: 'מסע למידה', teacher: 'אתי קומפלר', css: 'tt-subj-journey' },
+                { subject: 'שפה', teacher: 'אתי קומפלר', css: 'tt-subj-lang' },
+                { subject: 'שפה', teacher: 'אתי קומפלר', css: 'tt-subj-lang' },
+                { subject: 'בשבילי מורשת', teacher: 'שטרוטי אורנה', css: 'tt-subj-heritage' },
+                { subject: 'תנ״ך', teacher: 'שטרוטי אורנה', css: 'tt-subj-bible' }
+            ],
+            'רביעי': [
+                { subject: 'חשבון', teacher: 'דעיאמשה אברהם', css: 'tt-subj-math' },
+                { subject: 'חשבון', teacher: 'דעיאמשה אברהם', css: 'tt-subj-math' },
+                { subject: 'אומנות', teacher: '', css: 'tt-subj-art' },
+                { subject: 'שפה', teacher: 'אתי קומפלר', css: 'tt-subj-lang' },
+                { subject: 'מסע למידה', teacher: 'אתי קומפלר', css: 'tt-subj-journey' },
+                { subject: 'תנ״ך', teacher: 'שטרוטי אורנה', css: 'tt-subj-bible' }
+            ],
+            'חמישי': [
+                { subject: 'חשבון', teacher: 'דעיאמשה אברהם', css: 'tt-subj-math' },
+                { subject: 'חשבון', teacher: 'דעיאמשה אברהם', css: 'tt-subj-math' },
+                { subject: 'חינוך־זה״ב', teacher: 'אתי קומפלר', css: 'tt-subj-art' },
+                { subject: 'אנגלית', teacher: 'אפלבוים דליה רחל', css: 'tt-subj-eng' },
+                { subject: 'גיאומטריה', teacher: 'דעיאמשה אברהם', css: 'tt-subj-geo' },
+                { subject: 'מדע וטכנולוגיה', teacher: 'לנקר הגר', css: 'tt-subj-sci' }
+            ],
+            'שישי': [
+                { subject: 'חשבון', teacher: 'דעיאמשה אברהם', css: 'tt-subj-math' },
+                { subject: 'חנ״ג', teacher: 'פלד חן', css: 'tt-subj-pe' },
+                null,
+                { subject: 'הכוחות שבדרכי', teacher: 'אתי קומפלר', css: 'tt-subj-values' },
+                null,
+                null
+            ]
+        };
+
         let activeFilter = 'all';
         let selectedDay = defaultDayName();
 
@@ -197,7 +278,6 @@
 
         function defaultDayName() {
             const today = jsDayToHebrew();
-            // שבת → מעבר לראשון (יום רלוונטי הבא)
             if (today === 'שבת') return 'ראשון';
             return schedule.some(d => d.day === today) ? today : 'ראשון';
         }
@@ -216,8 +296,27 @@
                     <div class="font-bold text-sm leading-snug">${a.title}</div>
                     <div class="text-xs font-semibold mt-0.5" dir="ltr">${a.time}</div>
                     ${a.place ? `<div class="text-[11px] font-medium mt-1 opacity-90">📍 ${a.place}</div>` : ''}
+                    ${a.teacher ? `<div class="text-[10px] mt-0.5 opacity-70">${a.teacher}</div>` : ''}
                 </div>
             `;
+        }
+
+        function ozSchoolLessonsForDay(dayName) {
+            const lessons = ozSchool[dayName] || [];
+            return lessons
+                .map((lesson, idx) => {
+                    if (!lesson) return null;
+                    return {
+                        title: lesson.subject,
+                        time: PERIODS[idx].time,
+                        place: 'בית הספר',
+                        teacher: lesson.teacher,
+                        personLabel: 'עוז · בית ספר',
+                        chipClass: 'chip-oz-school',
+                        sort: parseStartMinutes(PERIODS[idx].time)
+                    };
+                })
+                .filter(Boolean);
         }
 
         function collectActivities(day, f) {
@@ -233,6 +332,7 @@
                 }));
             }
             if (f.showOz) {
+                ozSchoolLessonsForDay(day.day).forEach(a => list.push(a));
                 (day.oz || []).forEach(a => list.push({
                     ...a, personLabel: 'עוז · חוגים', chipClass: 'chip-oz', sort: parseStartMinutes(a.time)
                 }));
@@ -263,6 +363,11 @@
             const todayName = jsDayToHebrew();
             const bar = document.getElementById('days-bar');
             bar.innerHTML = '';
+            if (activeFilter === 'oz-school') {
+                bar.classList.add('opacity-40', 'pointer-events-none');
+            } else {
+                bar.classList.remove('opacity-40', 'pointer-events-none');
+            }
             schedule.forEach(item => {
                 const btn = document.createElement('button');
                 btn.type = 'button';
@@ -354,13 +459,74 @@
             return `<div class="mt-3 space-y-2"><h3 class="text-xs font-extrabold text-stone-800">הסעות ואיסופים</h3>${rows.map(r => r.html).join('')}</div>`;
         }
 
+        function renderOzSchoolGrid() {
+            const days = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי'];
+            const todayName = jsDayToHebrew();
+
+            const head = days.map(d => `
+                <th class="p-1.5 text-[11px] sm:text-xs font-extrabold border border-stone-200 bg-blue-600 text-white ${d === todayName ? 'ring-2 ring-inset ring-amber-300' : ''}">
+                    ${d}${d === todayName ? '<div class="text-[9px] font-bold opacity-90">היום</div>' : ''}
+                </th>
+            `).join('');
+
+            const rows = PERIODS.map((period, idx) => {
+                const cells = days.map(d => {
+                    const lesson = (ozSchool[d] || [])[idx];
+                    if (!lesson) {
+                        return `<td class="tt-cell p-1 border border-stone-200 tt-subj-empty text-[10px] text-center align-top">—</td>`;
+                    }
+                    return `
+                        <td class="tt-cell p-1 border border-stone-200 ${lesson.css} align-top">
+                            <div class="font-bold text-[10px] sm:text-[11px] leading-tight">${lesson.subject}</div>
+                            ${lesson.teacher ? `<div class="text-[9px] opacity-70 leading-tight mt-0.5">${lesson.teacher}</div>` : ''}
+                        </td>`;
+                }).join('');
+                return `
+                    <tr>
+                        <th class="p-1.5 border border-stone-200 bg-slate-100 text-[10px] sm:text-xs font-bold whitespace-nowrap align-top">
+                            <div>${period.num}</div>
+                            <div class="font-semibold opacity-70" dir="ltr">${period.time}</div>
+                        </th>
+                        ${cells}
+                    </tr>`;
+            }).join('');
+
+            return `
+                <article class="bg-white/95 rounded-2xl border border-blue-200 p-3 sm:p-4 shadow-sm space-y-3">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <div>
+                            <h2 class="text-lg sm:text-xl font-extrabold name-oz">מערכת שעות · עוז</h2>
+                            <p class="text-xs text-stone-500">כיתה ב׳ ה · בית הספר</p>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto custom-scrollbar -mx-1 px-1">
+                        <table class="w-full min-w-[640px] border-collapse text-right">
+                            <thead>
+                                <tr>
+                                    <th class="p-1.5 text-[11px] font-extrabold border border-stone-200 bg-slate-700 text-white">שיעור</th>
+                                    ${head}
+                                </tr>
+                            </thead>
+                            <tbody>${rows}</tbody>
+                        </table>
+                    </div>
+                </article>
+            `;
+        }
+
         function render() {
             const todayName = jsDayToHebrew();
             document.getElementById('today-badge').textContent = `היום: ${todayName}`;
             renderDaysBar();
 
-            const day = schedule.find(d => d.day === selectedDay);
             const root = document.getElementById('schedule-root');
+
+            if (activeFilter === 'oz-school') {
+                root.innerHTML = renderOzSchoolGrid();
+                return;
+            }
+
+            const day = schedule.find(d => d.day === selectedDay);
             if (!day) {
                 root.innerHTML = '';
                 return;
