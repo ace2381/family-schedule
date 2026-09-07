@@ -14,29 +14,71 @@
         body {
             font-family: 'Rubik', sans-serif;
             background:
-                radial-gradient(ellipse 90% 60% at 10% -10%, rgba(13, 148, 136, 0.12), transparent 50%),
-                radial-gradient(ellipse 70% 50% at 100% 0%, rgba(194, 65, 12, 0.08), transparent 45%),
+                radial-gradient(ellipse 90% 60% at 10% -10%, rgba(22, 163, 74, 0.10), transparent 50%),
+                radial-gradient(ellipse 70% 50% at 100% 0%, rgba(219, 39, 119, 0.08), transparent 45%),
                 #f4f1eb;
             color: #1c1917;
             -webkit-tap-highlight-color: transparent;
         }
         .day-nav-btn.active {
-            background: #0f766e;
+            background: #334155;
             color: #fff;
-            border-color: #0f766e;
-            box-shadow: 0 4px 10px rgba(15, 118, 110, 0.25);
+            border-color: #334155;
+            box-shadow: 0 4px 10px rgba(51, 65, 85, 0.25);
         }
-        .filter-btn.active {
-            background: #0f766e;
+        .filter-btn.active[data-filter="all"] {
+            background: #334155;
             color: #fff;
-            border-color: #0f766e;
+            border-color: #334155;
         }
-        .chip-or { background: #ccfbf1; color: #115e59; border-color: #99f6e4; }
-        .chip-romi { background: #ffedd5; color: #9a3412; border-color: #fed7aa; }
-        .chip-oz { background: #dbeafe; color: #1e3a8a; border-color: #bfdbfe; }
+        .filter-btn.active[data-filter="or"],
+        .filter-btn.filter-or {
+            background: #dcfce7;
+            color: #14532d;
+            border-color: #86efac;
+        }
+        .filter-btn.active[data-filter="or"] {
+            background: #16a34a;
+            color: #fff;
+            border-color: #16a34a;
+        }
+        .filter-btn.filter-romi {
+            background: #fce7f3;
+            color: #9d174d;
+            border-color: #f9a8d4;
+        }
+        .filter-btn.active[data-filter="romi"] {
+            background: #db2777;
+            color: #fff;
+            border-color: #db2777;
+        }
+        .filter-btn.filter-oz {
+            background: #dbeafe;
+            color: #1e3a8a;
+            border-color: #93c5fd;
+        }
+        .filter-btn.active[data-filter="oz"] {
+            background: #2563eb;
+            color: #fff;
+            border-color: #2563eb;
+        }
+        .filter-btn.active[data-filter="drive"] {
+            background: #d97706;
+            color: #fff;
+            border-color: #d97706;
+        }
+        .chip-or { background: #dcfce7; color: #14532d; border-color: #86efac; }
+        .chip-romi { background: #fce7f3; color: #9d174d; border-color: #f9a8d4; }
+        .chip-oz { background: #dbeafe; color: #1e3a8a; border-color: #93c5fd; }
         .chip-drive { background: #fef3c7; color: #92400e; border-color: #fde68a; }
-        .chip-pickup { background: #fff7ed; color: #9a3412; border-color: #fdba74; }
-        .chip-school { background: #f3e8ff; color: #6b21a8; border-color: #e9d5ff; }
+        .chip-school-both {
+            background: linear-gradient(135deg, #dcfce7 0%, #dbeafe 100%);
+            color: #1e293b;
+            border-color: #a7f3d0;
+        }
+        .name-or { color: #16a34a; }
+        .name-romi { color: #db2777; }
+        .name-oz { color: #2563eb; }
         .empty-slot { color: #a8a29e; font-style: italic; }
         .touch { min-height: 44px; touch-action: manipulation; }
     </style>
@@ -47,20 +89,20 @@
         <div class="max-w-5xl mx-auto px-3 sm:px-5 py-3">
             <div class="flex flex-wrap items-end justify-between gap-2 mb-3">
                 <div>
-                    <p class="text-[10px] sm:text-xs font-bold tracking-wide text-teal-800 uppercase">מערכת שבועית</p>
+                    <p class="text-[10px] sm:text-xs font-bold tracking-wide text-stone-500 uppercase">מערכת שבועית</p>
                     <h1 class="text-xl sm:text-2xl font-extrabold text-stone-900 leading-tight">לוח הסעות וחוגים</h1>
                 </div>
-                <div id="today-badge" class="text-xs font-bold px-3 py-1.5 rounded-full bg-teal-800 text-white"></div>
+                <div id="today-badge" class="text-xs font-bold px-3 py-1.5 rounded-full bg-slate-700 text-white"></div>
             </div>
 
             <div id="days-bar" class="grid grid-cols-6 gap-1 sm:gap-1.5 mb-2.5"></div>
 
             <div class="flex gap-1.5 overflow-x-auto pb-0.5">
-                <button type="button" class="filter-btn active shrink-0 px-3 py-1.5 rounded-full border text-xs font-bold touch" data-filter="all">הכל</button>
-                <button type="button" class="filter-btn shrink-0 px-3 py-1.5 rounded-full border border-stone-300 text-xs font-bold text-stone-700 touch" data-filter="or">אור</button>
-                <button type="button" class="filter-btn shrink-0 px-3 py-1.5 rounded-full border border-stone-300 text-xs font-bold text-stone-700 touch" data-filter="romi">רומי</button>
-                <button type="button" class="filter-btn shrink-0 px-3 py-1.5 rounded-full border border-stone-300 text-xs font-bold text-stone-700 touch" data-filter="oz">עוז</button>
-                <button type="button" class="filter-btn shrink-0 px-3 py-1.5 rounded-full border border-stone-300 text-xs font-bold text-stone-700 touch" data-filter="drive">הסעות</button>
+                <button type="button" class="filter-btn active shrink-0 px-3 py-1.5 rounded-full border border-stone-300 text-xs font-bold text-stone-700 touch" data-filter="all">הכל</button>
+                <button type="button" class="filter-btn filter-or shrink-0 px-3 py-1.5 rounded-full border text-xs font-bold touch" data-filter="or">אור</button>
+                <button type="button" class="filter-btn filter-romi shrink-0 px-3 py-1.5 rounded-full border text-xs font-bold touch" data-filter="romi">רומי</button>
+                <button type="button" class="filter-btn filter-oz shrink-0 px-3 py-1.5 rounded-full border text-xs font-bold touch" data-filter="oz">עוז</button>
+                <button type="button" class="filter-btn shrink-0 px-3 py-1.5 rounded-full border border-amber-300 bg-amber-50 text-amber-900 text-xs font-bold touch" data-filter="drive">הסעות</button>
             </div>
         </div>
     </header>
@@ -82,8 +124,7 @@
                 romi: [],
                 oz: [{ title: 'ג׳ודו', time: '16:15–17:15', place: 'אפולוניה' }],
                 ozLesson: null,
-                schoolReturn: 'אור ועוז חוזרים יחד ב־13:30',
-                schoolReturnTime: '13:30',
+                schoolReturn: { names: ['עוז', 'אור'], detail: 'חוזרים יחד מבית הספר ב־13:30', time: '13:30' },
                 romiPickup: { time: '16:00', place: 'מהגן' },
                 orPickup: null
             },
@@ -94,8 +135,7 @@
                 romi: [],
                 oz: [{ title: 'מחשבים', time: '18:00–19:00', place: 'מרכז מטאור' }],
                 ozLesson: null,
-                schoolReturn: 'אור ועוז חוזרים יחד ב־13:30',
-                schoolReturnTime: '13:30',
+                schoolReturn: { names: ['עוז', 'אור'], detail: 'חוזרים יחד מבית הספר ב־13:30', time: '13:30' },
                 romiPickup: { time: '16:00', place: 'מהגן' },
                 orPickup: null
             },
@@ -109,8 +149,7 @@
                 romi: [{ title: 'התעמלות קרקע', time: '17:00–17:45', place: 'מרכז מטאור' }],
                 oz: [],
                 ozLesson: { title: '📐 חשבון עם אמא', time: '19:00–20:00', place: 'בבית' },
-                schoolReturn: 'עוז חוזר ב־13:30 מבית הספר',
-                schoolReturnTime: '13:30',
+                schoolReturn: { names: ['עוז'], detail: 'חוזר מבית הספר ב־13:30', time: '13:30' },
                 romiPickup: { time: '16:00', place: 'מהגן' },
                 orPickup: { time: '15:00', place: 'מהנבחרת', note: 'בסוף נבחרת אומנות' }
             },
@@ -121,8 +160,7 @@
                 romi: [],
                 oz: [{ title: 'גיטרה', time: '16:00–16:40', place: null }],
                 ozLesson: null,
-                schoolReturn: 'עוז חוזר ב־13:30 מבית הספר',
-                schoolReturnTime: '13:30',
+                schoolReturn: { names: ['עוז'], detail: 'חוזר מבית הספר ב־13:30', time: '13:30' },
                 romiPickup: { time: '16:00', place: 'מהגן' },
                 orPickup: { time: '15:00', place: 'מאילוף כלבים', note: 'בסוף אילוף הכלבים' }
             },
@@ -133,8 +171,7 @@
                 romi: [{ title: 'אנגלית', time: '17:30–18:15', place: 'מרכז מטאור' }],
                 oz: [],
                 ozLesson: { title: '🇬🇧 אנגלית עם אבא', time: '19:00–20:00', place: 'בבית' },
-                schoolReturn: 'אור ועוז חוזרים יחד ב־13:30',
-                schoolReturnTime: '13:30',
+                schoolReturn: { names: ['עוז', 'אור'], detail: 'חוזרים יחד מבית הספר ב־13:30', time: '13:30' },
                 romiPickup: { time: '16:00', place: 'מהגן' },
                 orPickup: null
             },
@@ -145,8 +182,7 @@
                 romi: [],
                 oz: [],
                 ozLesson: null,
-                schoolReturn: 'אור ועוז חוזרים מבית הספר ב־11:40',
-                schoolReturnTime: '11:40',
+                schoolReturn: { names: ['עוז', 'אור'], detail: 'חוזרים מבית הספר ב־11:40', time: '11:40' },
                 romiPickup: { time: '12:00', place: 'מהגן' },
                 orPickup: null
             }
@@ -247,17 +283,42 @@
             });
         }
 
+        function nameClass(name) {
+            if (name === 'אור') return 'name-or';
+            if (name === 'רומי') return 'name-romi';
+            if (name === 'עוז') return 'name-oz';
+            return '';
+        }
+
+        function formatNames(names) {
+            return names.map((n, i) => {
+                const sep = i === 0 ? '' : (i === names.length - 1 ? ' ו' : ', ');
+                return `${sep}<span class="font-extrabold ${nameClass(n)}">${n}</span>`;
+            }).join('');
+        }
+
+        function schoolChipClass(names) {
+            const hasOr = names.includes('אור');
+            const hasOz = names.includes('עוז');
+            if (hasOr && hasOz) return 'chip-school-both';
+            if (hasOr) return 'chip-or';
+            if (hasOz) return 'chip-oz';
+            return 'chip-drive';
+        }
+
         function pickupSection(day, f) {
             if (!f.showDrive) return '';
             const rows = [];
 
             if (day.schoolReturn) {
+                const sr = day.schoolReturn;
+                const t = sr.time || '13:30';
                 rows.push({
-                    sort: 13 * 60 + 30,
+                    sort: parseStartMinutes(t),
                     html: `
-                    <div class="rounded-xl border chip-school px-3 py-2.5 text-xs leading-relaxed">
-                        <div class="font-bold mb-0.5">🏫 חזרה מבית הספר · <span dir="ltr">13:30</span></div>
-                        ${day.schoolReturn}
+                    <div class="rounded-xl border ${schoolChipClass(sr.names)} px-3 py-2.5 text-xs leading-relaxed">
+                        <div class="text-sm font-extrabold mb-0.5">${formatNames(sr.names)}</div>
+                        <div>${sr.detail}</div>
                     </div>`
                 });
             }
@@ -266,10 +327,12 @@
                     sort: parseStartMinutes(day.orPickup.time),
                     html: `
                     <div class="rounded-xl border chip-or px-3 py-2.5 text-xs leading-relaxed">
-                        <div class="font-bold mb-0.5">אור · איסוף</div>
-                        לאסוף את אור <strong>${day.orPickup.place}</strong>
-                        ב־<span dir="ltr" class="font-extrabold">${day.orPickup.time}</span>
-                        ${day.orPickup.note ? ` · ${day.orPickup.note}` : ''}
+                        <div class="text-sm font-extrabold mb-0.5 name-or">אור</div>
+                        <div>
+                            איסוף <strong>${day.orPickup.place}</strong>
+                            ב־<span dir="ltr" class="font-extrabold">${day.orPickup.time}</span>
+                            ${day.orPickup.note ? ` · ${day.orPickup.note}` : ''}
+                        </div>
                     </div>`
                 });
             }
@@ -277,9 +340,11 @@
                 rows.push({
                     sort: parseStartMinutes(day.romiPickup.time),
                     html: `
-                    <div class="rounded-xl border chip-pickup px-3 py-2.5 text-xs leading-relaxed">
-                        <div class="font-bold mb-0.5">רומי · איסוף מהגן</div>
-                        לאסוף מהגן ב־<span dir="ltr" class="font-extrabold">${day.romiPickup.time}</span>
+                    <div class="rounded-xl border chip-romi px-3 py-2.5 text-xs leading-relaxed">
+                        <div class="text-sm font-extrabold mb-0.5 name-romi">רומי</div>
+                        <div>
+                            איסוף מהגן ב־<span dir="ltr" class="font-extrabold">${day.romiPickup.time}</span>
+                        </div>
                     </div>`
                 });
             }
@@ -315,11 +380,11 @@
             }
 
             root.innerHTML = `
-                <article class="bg-white/95 rounded-2xl border border-stone-200 p-3.5 sm:p-5 ${isToday ? 'ring-2 ring-teal-700 shadow-lg shadow-teal-900/10' : 'shadow-sm'}">
+                <article class="bg-white/95 rounded-2xl border border-stone-200 p-3.5 sm:p-5 ${isToday ? 'ring-2 ring-slate-600 shadow-lg shadow-slate-900/10' : 'shadow-sm'}">
                     <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
                         <div class="flex items-center gap-2">
                             <h2 class="text-xl sm:text-2xl font-extrabold text-stone-900">יום ${day.day}</h2>
-                            ${isToday ? '<span class="text-[10px] font-bold bg-teal-800 text-white px-2 py-0.5 rounded-full">היום</span>' : ''}
+                            ${isToday ? '<span class="text-[10px] font-bold bg-slate-700 text-white px-2 py-0.5 rounded-full">היום</span>' : ''}
                         </div>
                         ${f.showDrive ? driverHtml : ''}
                     </div>
