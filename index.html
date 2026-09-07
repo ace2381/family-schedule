@@ -78,9 +78,9 @@
             {
                 day: 'ראשון',
                 driver: 'אבא',
-                or: [{ title: 'שיעור עם יפית', time: '15:30–16:15' }],
+                or: [{ title: 'שיעור עם יפית', time: '15:30–16:15', place: 'בבית' }],
                 romi: [],
-                oz: [{ title: 'ג׳ודו', time: '16:15–17:15' }],
+                oz: [{ title: 'ג׳ודו', time: '16:15–17:15', place: 'אפולוניה' }],
                 ozLesson: null,
                 schoolReturn: 'אור ועוז חוזרים יחד ב־13:30',
                 romiPickup: { time: '16:00', place: 'מהגן' },
@@ -89,9 +89,9 @@
             {
                 day: 'שני',
                 driver: 'אבא',
-                or: [{ title: 'אומנות רב-תחומית', time: '14:45–16:00' }],
-                romi: [{ title: 'אנגלית', time: '16:00–16:45' }],
-                oz: [{ title: 'מחשבים', time: '18:00–19:00' }],
+                or: [{ title: 'אומנות רב-תחומית', time: '14:45–16:00', place: 'מרכז מטאור' }],
+                romi: [{ title: 'אנגלית', time: '16:00–16:45', place: 'מרכז מטאור' }],
+                oz: [{ title: 'מחשבים', time: '18:00–19:00', place: 'מרכז מטאור' }],
                 ozLesson: null,
                 schoolReturn: 'אור ועוז חוזרים יחד ב־13:30',
                 romiPickup: { time: '16:00', place: 'מהגן' },
@@ -101,22 +101,22 @@
                 day: 'שלישי',
                 driver: 'אבא',
                 or: [
-                    { title: 'נבחרת אומנות', time: '13:30–15:00' },
-                    { title: 'שיעור עם יפית', time: '17:30–18:15' }
+                    { title: 'נבחרת אומנות', time: '13:30–15:00', place: 'בית הספר' },
+                    { title: 'שיעור עם יפית', time: '17:30–18:15', place: 'בבית' }
                 ],
-                romi: [{ title: 'התעמלות קרקע', time: '17:00–17:45' }],
+                romi: [{ title: 'התעמלות קרקע', time: '17:00–17:45', place: 'מרכז מטאור' }],
                 oz: [],
-                ozLesson: { title: '📐 חשבון עם אמא', time: '19:00–20:00' },
+                ozLesson: { title: '📐 חשבון עם אמא', time: '19:00–20:00', place: 'בבית' },
                 schoolReturn: 'לא חוזרים יחד · לאור יש נבחרת מ־13:30',
                 romiPickup: { time: '16:00', place: 'מהגן' },
-                orPickup: { time: '15:00', place: 'מבית הספר', note: 'אחרי נבחרת אומנות' }
+                orPickup: { time: '15:00', place: 'מהנבחרת', note: 'חובה לאסוף את אור בסוף נבחרת אומנות' }
             },
             {
                 day: 'רביעי',
                 driver: 'אמא',
-                or: [{ title: 'אילוף כלבים', time: '13:30–15:00' }],
+                or: [{ title: 'אילוף כלבים', time: '13:30–15:00', place: null }],
                 romi: [],
-                oz: [{ title: 'גיטרה', time: '16:00–16:40' }],
+                oz: [{ title: 'גיטרה', time: '16:00–16:40', place: null }],
                 ozLesson: null,
                 schoolReturn: 'עוז חוזר ב־13:30 · לאור יש אילוף',
                 romiPickup: { time: '16:00', place: 'מהגן' },
@@ -125,10 +125,10 @@
             {
                 day: 'חמישי',
                 driver: 'אמא',
-                or: [{ title: 'אנגלית', time: '18:15–19:15' }],
-                romi: [{ title: 'אנגלית', time: '17:30–18:15' }],
+                or: [{ title: 'אנגלית', time: '18:15–19:15', place: 'מרכז מטאור' }],
+                romi: [{ title: 'אנגלית', time: '17:30–18:15', place: 'מרכז מטאור' }],
                 oz: [],
-                ozLesson: { title: '🇬🇧 אנגלית עם אבא', time: '19:00–20:00' },
+                ozLesson: { title: '🇬🇧 אנגלית עם אבא', time: '19:00–20:00', place: 'בבית' },
                 schoolReturn: 'אור ועוז חוזרים יחד ב־13:30',
                 romiPickup: { time: '16:00', place: 'מהגן' },
                 orPickup: null
@@ -167,6 +167,7 @@
                     <div class="text-[10px] font-bold opacity-70">${personLabel}</div>
                     <div class="font-bold text-sm leading-snug">${a.title}</div>
                     <div class="text-xs font-semibold mt-0.5" dir="ltr">${a.time}</div>
+                    ${a.place ? `<div class="text-[11px] font-medium mt-1 opacity-90">📍 ${a.place}</div>` : ''}
                 </div>
             `).join('');
         }
@@ -208,20 +209,23 @@
             if (!f.showDrive) return '';
             const rows = [];
 
+            if (day.orPickup) {
+                rows.unshift(`
+                    <div class="rounded-xl border-2 border-teal-600 bg-teal-50 px-3 py-3 text-xs leading-relaxed text-teal-950 shadow-sm">
+                        <div class="font-extrabold text-sm mb-1">⚠️ אור · איסוף מהנבחרת</div>
+                        <div>
+                            לאסוף את אור <strong>${day.orPickup.place}</strong>
+                            ב־<span dir="ltr" class="font-extrabold text-base">${day.orPickup.time}</span>
+                        </div>
+                        ${day.orPickup.note ? `<div class="mt-1 font-semibold opacity-90">${day.orPickup.note}</div>` : ''}
+                    </div>
+                `);
+            }
             if (day.schoolReturn) {
                 rows.push(`
                     <div class="rounded-xl border chip-school px-3 py-2.5 text-xs leading-relaxed">
                         <div class="font-bold mb-0.5">🏫 חזרה מבית הספר</div>
                         ${day.schoolReturn}
-                    </div>
-                `);
-            }
-            if (day.orPickup) {
-                rows.push(`
-                    <div class="rounded-xl border chip-or px-3 py-2.5 text-xs leading-relaxed">
-                        <div class="font-bold mb-0.5">אור · איסוף מיוחד</div>
-                        לאסוף מבית הספר ב־<span dir="ltr" class="font-extrabold">${day.orPickup.time}</span>
-                        ${day.orPickup.note ? ` · ${day.orPickup.note}` : ''}
                     </div>
                 `);
             }
@@ -268,6 +272,7 @@
                             <div class="text-[10px] font-bold opacity-70">עוז · שיעור ערב</div>
                             <div class="font-bold text-sm leading-snug">${day.ozLesson.title}</div>
                             <div class="text-xs font-semibold mt-0.5" dir="ltr">${day.ozLesson.time}</div>
+                            ${day.ozLesson.place ? `<div class="text-[11px] font-medium mt-1 opacity-90">📍 ${day.ozLesson.place}</div>` : ''}
                         </div>`;
                 }
             }
