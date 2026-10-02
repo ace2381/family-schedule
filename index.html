@@ -285,8 +285,6 @@
             ]
         };
 
-        const OR_PERIODS = PERIODS.concat([{ num: 7, time: '' }]);
-
         // מערכת שעות אור
         const orSchool = {
             'ראשון': [
@@ -295,8 +293,7 @@
                 { subject: 'מדע וטכנולוגיה', teacher: 'סופי', css: 'tt-subj-sci' },
                 { subject: 'חינוך לערכים', teacher: 'סופי', css: 'tt-subj-values' },
                 { subject: 'תאוצה', teacher: 'מדריך · קבוצה 3', css: 'tt-subj-pe' },
-                { subject: 'שפה', teacher: 'לינוי אשורי', css: 'tt-subj-lang' },
-                { subject: 'דוברי אנגלית', teacher: 'דליה', css: 'tt-subj-eng' }
+                { subject: 'שפה', teacher: 'לינוי אשורי', css: 'tt-subj-lang' }
             ],
             'שני': [
                 { subject: 'מפגש בחירה', teacher: '', css: 'tt-subj-journey' },
@@ -304,8 +301,7 @@
                 { subject: 'מסע למידה', teacher: 'סופי', css: 'tt-subj-journey' },
                 { subject: 'מסע למידה', teacher: 'סופי', css: 'tt-subj-journey' },
                 { subject: 'חשבון', teacher: 'רונן אלמליח', css: 'tt-subj-math' },
-                { subject: 'שפה', teacher: 'לינוי אשורי', css: 'tt-subj-lang' },
-                null
+                { subject: 'שפה', teacher: 'לינוי אשורי', css: 'tt-subj-lang' }
             ],
             'שלישי': [
                 { subject: 'שפה', teacher: 'לינוי אשורי', css: 'tt-subj-lang' },
@@ -313,8 +309,7 @@
                 { subject: 'אנגלית', teacher: 'דליה', css: 'tt-subj-eng' },
                 { subject: 'ספרייה־שפה', teacher: 'נחמי לוי', css: 'tt-subj-lang' },
                 { subject: 'תורה', teacher: 'סופי', css: 'tt-subj-bible' },
-                { subject: 'אנגלית', teacher: 'דליה', css: 'tt-subj-eng' },
-                null
+                { subject: 'אנגלית', teacher: 'דליה', css: 'tt-subj-eng' }
             ],
             'רביעי': [
                 { subject: 'מדע וטכנולוגיה', teacher: 'סופי', css: 'tt-subj-sci' },
@@ -322,8 +317,7 @@
                 { subject: 'חשבון', teacher: 'רונן אלמליח', css: 'tt-subj-math' },
                 { subject: 'חשבון', teacher: 'רונן אלמליח', css: 'tt-subj-math' },
                 { subject: 'אומנות', teacher: 'איה סעיד', css: 'tt-subj-art' },
-                { subject: 'גיאומטריה', teacher: 'רונן אלמליח', css: 'tt-subj-geo' },
-                null
+                { subject: 'גיאומטריה', teacher: 'רונן אלמליח', css: 'tt-subj-geo' }
             ],
             'חמישי': [
                 { subject: 'אנגלית', teacher: 'דליה', css: 'tt-subj-eng' },
@@ -331,15 +325,13 @@
                 { subject: 'חנ״ג', teacher: 'גלית רוקח נקר', css: 'tt-subj-pe' },
                 { subject: 'חשבון', teacher: 'רונן אלמליח', css: 'tt-subj-math' },
                 { subject: 'הכוחות שבדרך', teacher: 'סופי', css: 'tt-subj-values' },
-                { subject: 'שפה', teacher: 'ליאל', css: 'tt-subj-lang' },
-                null
+                { subject: 'שפה', teacher: 'ליאל', css: 'tt-subj-lang' }
             ],
             'שישי': [
                 { subject: 'חנ״ג', teacher: 'גלית רוקח נקר', css: 'tt-subj-pe' },
                 { subject: 'שפה', teacher: 'לינוי אשורי', css: 'tt-subj-lang' },
                 { subject: 'פריזבי', teacher: 'מדריך · קבוצה 1', css: 'tt-subj-pe' },
                 { subject: 'שפה', teacher: 'לינוי אשורי', css: 'tt-subj-lang' },
-                null,
                 null,
                 null
             ]
@@ -640,9 +632,9 @@
                 title: { text: 'מערכת שעות · אור', className: 'name-or' },
                 subtitle: 'בית הספר',
                 data: orSchool,
-                periods: OR_PERIODS,
+                periods: PERIODS,
                 headClass: 'bg-green-700',
-                note: 'שעות השיעורים 1–6 כמו במערכת של עוז. ביום ראשון יש גם שיעור 7, דוברי אנגלית עם דליה.'
+                note: 'שעות השיעורים כמו במערכת של עוז.'
             });
         }
 
