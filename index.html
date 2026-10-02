@@ -67,6 +67,11 @@
             color: #fff;
             border-color: #1d4ed8;
         }
+        .filter-btn.active[data-filter="or-school"] {
+            background: #15803d;
+            color: #fff;
+            border-color: #15803d;
+        }
         .filter-btn.filter-holidays {
             background: #ecfdf5;
             color: #065f46;
@@ -131,6 +136,7 @@
                 <button type="button" class="filter-btn filter-romi shrink-0 px-3 py-1.5 rounded-full border text-xs font-bold touch" data-filter="romi">רומי</button>
                 <button type="button" class="filter-btn filter-oz shrink-0 px-3 py-1.5 rounded-full border text-xs font-bold touch" data-filter="oz">עוז</button>
                 <button type="button" class="filter-btn shrink-0 px-3 py-1.5 rounded-full border border-amber-300 bg-amber-50 text-amber-900 text-xs font-bold touch" data-filter="drive">הסעות</button>
+                <button type="button" class="filter-btn filter-or shrink-0 px-3 py-1.5 rounded-full border text-xs font-bold touch" data-filter="or-school">מערכת אור</button>
                 <button type="button" class="filter-btn filter-oz shrink-0 px-3 py-1.5 rounded-full border text-xs font-bold touch" data-filter="oz-school">מערכת עוז</button>
                 <button type="button" class="filter-btn filter-holidays shrink-0 px-3 py-1.5 rounded-full border text-xs font-bold touch" data-filter="holidays">חופשות</button>
             </div>
@@ -279,6 +285,66 @@
             ]
         };
 
+        const OR_PERIODS = PERIODS.concat([{ num: 7, time: '' }]);
+
+        // מערכת שעות אור
+        const orSchool = {
+            'ראשון': [
+                { subject: 'תורה', teacher: 'סופי', css: 'tt-subj-bible' },
+                { subject: 'חינוך פיננסי', teacher: 'מדריך', css: 'tt-subj-values' },
+                { subject: 'מדע וטכנולוגיה', teacher: 'סופי', css: 'tt-subj-sci' },
+                { subject: 'חינוך לערכים', teacher: 'סופי', css: 'tt-subj-values' },
+                { subject: 'תאוצה', teacher: 'מדריך · קבוצה 3', css: 'tt-subj-pe' },
+                { subject: 'שפה', teacher: 'לינוי אשורי', css: 'tt-subj-lang' },
+                { subject: 'דוברי אנגלית', teacher: 'דליה', css: 'tt-subj-eng' }
+            ],
+            'שני': [
+                { subject: 'מפגש בחירה', teacher: '', css: 'tt-subj-journey' },
+                { subject: 'מפגש בחירה', teacher: '', css: 'tt-subj-journey' },
+                { subject: 'מסע למידה', teacher: 'סופי', css: 'tt-subj-journey' },
+                { subject: 'מסע למידה', teacher: 'סופי', css: 'tt-subj-journey' },
+                { subject: 'חשבון', teacher: 'רונן אלמליח', css: 'tt-subj-math' },
+                { subject: 'שפה', teacher: 'לינוי אשורי', css: 'tt-subj-lang' },
+                null
+            ],
+            'שלישי': [
+                { subject: 'שפה', teacher: 'לינוי אשורי', css: 'tt-subj-lang' },
+                { subject: 'מדע וטכנולוגיה', teacher: 'סופי', css: 'tt-subj-sci' },
+                { subject: 'אנגלית', teacher: 'דליה', css: 'tt-subj-eng' },
+                { subject: 'ספרייה־שפה', teacher: 'נחמי לוי', css: 'tt-subj-lang' },
+                { subject: 'תורה', teacher: 'סופי', css: 'tt-subj-bible' },
+                { subject: 'אנגלית', teacher: 'דליה', css: 'tt-subj-eng' },
+                null
+            ],
+            'רביעי': [
+                { subject: 'מדע וטכנולוגיה', teacher: 'סופי', css: 'tt-subj-sci' },
+                { subject: 'בשבילי מורשת', teacher: 'סופי', css: 'tt-subj-heritage' },
+                { subject: 'חשבון', teacher: 'רונן אלמליח', css: 'tt-subj-math' },
+                { subject: 'חשבון', teacher: 'רונן אלמליח', css: 'tt-subj-math' },
+                { subject: 'אומנות', teacher: 'איה סעיד', css: 'tt-subj-art' },
+                { subject: 'גיאומטריה', teacher: 'רונן אלמליח', css: 'tt-subj-geo' },
+                null
+            ],
+            'חמישי': [
+                { subject: 'אנגלית', teacher: 'דליה', css: 'tt-subj-eng' },
+                { subject: 'מסע למידה', teacher: 'סופי', css: 'tt-subj-journey' },
+                { subject: 'חנ״ג', teacher: 'גלית רוקח נקר', css: 'tt-subj-pe' },
+                { subject: 'חשבון', teacher: 'רונן אלמליח', css: 'tt-subj-math' },
+                { subject: 'הכוחות שבדרך', teacher: 'סופי', css: 'tt-subj-values' },
+                { subject: 'שפה', teacher: 'ליאל', css: 'tt-subj-lang' },
+                null
+            ],
+            'שישי': [
+                { subject: 'חנ״ג', teacher: 'גלית רוקח נקר', css: 'tt-subj-pe' },
+                { subject: 'שפה', teacher: 'לינוי אשורי', css: 'tt-subj-lang' },
+                { subject: 'פריזבי', teacher: 'מדריך · קבוצה 1', css: 'tt-subj-pe' },
+                { subject: 'שפה', teacher: 'לינוי אשורי', css: 'tt-subj-lang' },
+                null,
+                null,
+                null
+            ]
+        };
+
         // לוח חופשות תשפ״ז
         const holidays = [
             {
@@ -407,7 +473,7 @@
             const todayName = jsDayToHebrew();
             const bar = document.getElementById('days-bar');
             bar.innerHTML = '';
-            if (activeFilter === 'oz-school' || activeFilter === 'holidays') {
+            if (activeFilter === 'oz-school' || activeFilter === 'or-school' || activeFilter === 'holidays') {
                 bar.classList.add('opacity-40', 'pointer-events-none');
             } else {
                 bar.classList.remove('opacity-40', 'pointer-events-none');
@@ -503,19 +569,19 @@
             return `<div class="mt-3 space-y-2"><h3 class="text-xs font-extrabold text-stone-800">הסעות ואיסופים</h3>${rows.map(r => r.html).join('')}</div>`;
         }
 
-        function renderOzSchoolGrid() {
+        function renderSchoolGrid({ title, subtitle, data, periods, headClass, note }) {
             const days = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי'];
             const todayName = jsDayToHebrew();
 
             const head = days.map(d => `
-                <th class="p-1.5 text-[11px] sm:text-xs font-extrabold border border-stone-200 bg-blue-600 text-white ${d === todayName ? 'ring-2 ring-inset ring-amber-300' : ''}">
+                <th class="p-1.5 text-[11px] sm:text-xs font-extrabold border border-stone-200 ${headClass} text-white ${d === todayName ? 'ring-2 ring-inset ring-amber-300' : ''}">
                     ${d}${d === todayName ? '<div class="text-[9px] font-bold opacity-90">היום</div>' : ''}
                 </th>
             `).join('');
 
-            const rows = PERIODS.map((period, idx) => {
+            const rows = periods.map((period, idx) => {
                 const cells = days.map(d => {
-                    const lesson = (ozSchool[d] || [])[idx];
+                    const lesson = (data[d] || [])[idx];
                     if (!lesson) {
                         return `<td class="tt-cell p-1 border border-stone-200 tt-subj-empty text-[10px] text-center align-top">—</td>`;
                     }
@@ -529,20 +595,21 @@
                     <tr>
                         <th class="p-1.5 border border-stone-200 bg-slate-100 text-[10px] sm:text-xs font-bold whitespace-nowrap align-top">
                             <div>${period.num}</div>
-                            <div class="font-semibold opacity-70" dir="ltr">${period.time}</div>
+                            ${period.time ? `<div class="font-semibold opacity-70" dir="ltr">${period.time}</div>` : ''}
                         </th>
                         ${cells}
                     </tr>`;
             }).join('');
 
             return `
-                <article class="bg-white/95 rounded-2xl border border-blue-200 p-3 sm:p-4 shadow-sm space-y-3">
+                <article class="bg-white/95 rounded-2xl border border-stone-200 p-3 sm:p-4 shadow-sm space-y-3">
                     <div class="flex flex-wrap items-center justify-between gap-2">
                         <div>
-                            <h2 class="text-lg sm:text-xl font-extrabold name-oz">מערכת שעות · עוז</h2>
-                            <p class="text-xs text-stone-500">כיתה ב׳ ה · בית הספר</p>
+                            <h2 class="text-lg sm:text-xl font-extrabold ${title.className}">${title.text}</h2>
+                            <p class="text-xs text-stone-500">${subtitle}</p>
                         </div>
                     </div>
+                    ${note ? `<p class="text-[11px] text-stone-500 leading-relaxed">${note}</p>` : ''}
                     <div class="overflow-x-auto custom-scrollbar -mx-1 px-1">
                         <table class="w-full min-w-[640px] border-collapse text-right">
                             <thead>
@@ -556,6 +623,27 @@
                     </div>
                 </article>
             `;
+        }
+
+        function renderOzSchoolGrid() {
+            return renderSchoolGrid({
+                title: { text: 'מערכת שעות · עוז', className: 'name-oz' },
+                subtitle: 'כיתה ב׳ ה · בית הספר',
+                data: ozSchool,
+                periods: PERIODS,
+                headClass: 'bg-blue-600'
+            });
+        }
+
+        function renderOrSchoolGrid() {
+            return renderSchoolGrid({
+                title: { text: 'מערכת שעות · אור', className: 'name-or' },
+                subtitle: 'בית הספר',
+                data: orSchool,
+                periods: OR_PERIODS,
+                headClass: 'bg-green-700',
+                note: 'שעות השיעורים 1–6 כמו במערכת של עוז. ביום ראשון יש גם שיעור 7, דוברי אנגלית עם דליה.'
+            });
         }
 
         function todayAtMidnight() {
@@ -645,6 +733,11 @@
 
             if (activeFilter === 'oz-school') {
                 root.innerHTML = renderOzSchoolGrid();
+                return;
+            }
+
+            if (activeFilter === 'or-school') {
+                root.innerHTML = renderOrSchoolGrid();
                 return;
             }
 
