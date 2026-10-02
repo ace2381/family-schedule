@@ -233,53 +233,59 @@
             { num: 6, time: '12:45–13:30' }
         ];
 
-        // מערכת שעות עוז · כיתה ב׳ ה
+        const OZ_PERIODS = [
+            ...PERIODS,
+            { num: 7, time: '' }
+        ];
+
+        // מערכת שעות עוז · כיתה ב׳ ה · יצחק נבון
         const ozSchool = {
             'ראשון': [
-                { subject: 'מדע וטכנולוגיה', teacher: 'לנקר הגר', css: 'tt-subj-sci' },
-                { subject: 'מדע וטכנולוגיה', teacher: 'לנקר הגר', css: 'tt-subj-sci' },
-                null,
+                { subject: 'תאוצה', teacher: 'מדריך · קבוצה 3', css: 'tt-subj-pe' },
+                { subject: 'אנגלית', teacher: 'דליה אפלבוים', css: 'tt-subj-eng' },
+                { subject: 'אנגלית', teacher: 'דליה אפלבוים', css: 'tt-subj-eng' },
                 { subject: 'חנ״ג', teacher: 'פלד חן', css: 'tt-subj-pe' },
-                { subject: 'אנגלית', teacher: 'אפלבוים דליה רחל', css: 'tt-subj-eng' },
-                { subject: 'אנגלית', teacher: 'אפלבוים דליה רחל', css: 'tt-subj-eng' }
+                { subject: 'מדע וטכנולוגיה', teacher: 'הגר לנקרי', css: 'tt-subj-sci' },
+                null
             ],
             'שני': [
                 { subject: 'שפה', teacher: 'אתי קומפלר', css: 'tt-subj-lang' },
                 { subject: 'שפה', teacher: 'אתי קומפלר', css: 'tt-subj-lang' },
-                null,
-                { subject: 'שפה', teacher: 'אתי קומפלר', css: 'tt-subj-lang' },
-                { subject: 'חינוך לערכים', teacher: 'אתי קומפלר', css: 'tt-subj-values' },
-                { subject: 'אנגלית', teacher: 'אפלבוים דליה רחל', css: 'tt-subj-eng' }
+                { subject: 'מפגש בחירה', teacher: '', css: 'tt-subj-journey' },
+                { subject: 'מפגש בחירה', teacher: '', css: 'tt-subj-journey' },
+                { subject: 'תנ״ך', teacher: 'אורנה סטרוטי', css: 'tt-subj-bible' },
+                { subject: 'שפה', teacher: 'אתי קומפלר', css: 'tt-subj-lang' }
             ],
             'שלישי': [
                 { subject: 'מסע למידה', teacher: 'אתי קומפלר', css: 'tt-subj-journey' },
+                { subject: 'חינוך־זה״ב', teacher: 'איברהים דהמשה', css: 'tt-subj-values' },
                 { subject: 'מסע למידה', teacher: 'אתי קומפלר', css: 'tt-subj-journey' },
                 { subject: 'שפה', teacher: 'אתי קומפלר', css: 'tt-subj-lang' },
-                { subject: 'שפה', teacher: 'אתי קומפלר', css: 'tt-subj-lang' },
-                { subject: 'בשבילי מורשת', teacher: 'שטרוטי אורנה', css: 'tt-subj-heritage' },
-                { subject: 'תנ״ך', teacher: 'שטרוטי אורנה', css: 'tt-subj-bible' }
+                { subject: 'בשבילי מורשת', teacher: 'אתי קומפלר', css: 'tt-subj-heritage' },
+                { subject: 'תנ״ך', teacher: 'אורנה סטרוטי', css: 'tt-subj-bible' }
             ],
             'רביעי': [
-                { subject: 'חשבון', teacher: 'דעיאמשה אברהם', css: 'tt-subj-math' },
-                { subject: 'חשבון', teacher: 'דעיאמשה אברהם', css: 'tt-subj-math' },
-                { subject: 'אומנות', teacher: '', css: 'tt-subj-art' },
+                { subject: 'חינוך ימי<br>חשבון', teacher: 'מדריך<br>איברהים דהמשה', css: 'tt-subj-pe' },
+                { subject: 'חינוך ימי<br>חשבון', teacher: 'מדריך<br>איברהים דהמשה', css: 'tt-subj-pe' },
+                { subject: 'אומנות<br>כדוריד', teacher: 'מורן שפירא<br>מדריך', css: 'tt-subj-art' },
                 { subject: 'שפה', teacher: 'אתי קומפלר', css: 'tt-subj-lang' },
                 { subject: 'מסע למידה', teacher: 'אתי קומפלר', css: 'tt-subj-journey' },
-                { subject: 'תנ״ך', teacher: 'שטרוטי אורנה', css: 'tt-subj-bible' }
+                { subject: 'הכוחות שבדרך', teacher: 'איברהים דהמשה', css: 'tt-subj-values' },
+                { subject: 'אנגלית', teacher: 'דליה אפלבוים', css: 'tt-subj-eng' }
             ],
             'חמישי': [
-                { subject: 'חשבון', teacher: 'דעיאמשה אברהם', css: 'tt-subj-math' },
-                { subject: 'חשבון', teacher: 'דעיאמשה אברהם', css: 'tt-subj-math' },
-                { subject: 'חינוך־זה״ב', teacher: 'אתי קומפלר', css: 'tt-subj-art' },
-                { subject: 'אנגלית', teacher: 'אפלבוים דליה רחל', css: 'tt-subj-eng' },
-                { subject: 'גיאומטריה', teacher: 'דעיאמשה אברהם', css: 'tt-subj-geo' },
-                { subject: 'מדע וטכנולוגיה', teacher: 'לנקר הגר', css: 'tt-subj-sci' }
+                { subject: 'חשבון', teacher: 'איברהים דהמשה', css: 'tt-subj-math' },
+                { subject: 'אנגלית', teacher: 'דליה אפלבוים', css: 'tt-subj-eng' },
+                { subject: 'מדע וטכנולוגיה', teacher: 'הגר לנקרי', css: 'tt-subj-sci' },
+                { subject: 'חינוך לערכים', teacher: 'איברהים דהמשה', css: 'tt-subj-values' },
+                { subject: 'גיאומטריה', teacher: 'איברהים דהמשה', css: 'tt-subj-geo' },
+                { subject: 'מדע וטכנולוגיה', teacher: 'הגר לנקרי', css: 'tt-subj-sci' }
             ],
             'שישי': [
-                { subject: 'חשבון', teacher: 'דעיאמשה אברהם', css: 'tt-subj-math' },
                 { subject: 'חנ״ג', teacher: 'פלד חן', css: 'tt-subj-pe' },
-                null,
-                { subject: 'הכוחות שבדרכי', teacher: 'אתי קומפלר', css: 'tt-subj-values' },
+                { subject: 'פיזיקה', teacher: 'מדריך', css: 'tt-subj-sci' },
+                { subject: 'חשבון', teacher: 'איברהים דהמשה', css: 'tt-subj-math' },
+                { subject: 'חשבון', teacher: 'איברהים דהמשה', css: 'tt-subj-math' },
                 null,
                 null
             ]
@@ -622,8 +628,9 @@
                 title: { text: 'מערכת שעות · עוז', className: 'name-oz' },
                 subtitle: 'כיתה ב׳ ה · בית הספר',
                 data: ozSchool,
-                periods: PERIODS,
-                headClass: 'bg-blue-600'
+                periods: OZ_PERIODS,
+                headClass: 'bg-blue-600',
+                note: 'שיעור 7 מופיע רק ביום רביעי, בלי שעה במערכת.'
             });
         }
 
